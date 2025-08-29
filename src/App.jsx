@@ -1,4 +1,4 @@
-import React from 'react'
+
 import './App.css'
 
 // Components
@@ -6,8 +6,11 @@ import StatusPage from './components/StatusPage'
 import AdminDashboard from './components/AdminDashboard'
 import LoginForm from './components/LoginForm'
 import Navigation from './components/ui/Navigation'
-import LoadingSpinner from './components/ui/LoadingSpinner'
 import ErrorDisplay from './components/ui/ErrorDisplay'
+import {
+  StatusPageSkeleton,
+  AdminDashboardSkeleton
+} from './components/loading'
 
 // Custom hooks
 import { useAuth, useNavigation, useAppData } from './hooks'
@@ -26,8 +29,7 @@ function App() {
     updateService,
     deleteService,
     createIncident,
-    updateIncident,
-    addIncidentUpdate
+    updateIncident
   } = useAppData()
 
   // Event handlers
@@ -57,7 +59,9 @@ function App() {
 
       {/* Main Content */}
       <main>
-        {loading && <LoadingSpinner />}
+        {loading && navigation.isStatusView && <StatusPageSkeleton />}
+
+        {loading && navigation.isAdminView && <AdminDashboardSkeleton />}
 
         {error && <ErrorDisplay error={error} onRetry={loadData} />}
 
@@ -76,6 +80,7 @@ function App() {
               onCreateIncident={createIncident}
               onUpdateIncident={updateIncident}
               onRefresh={loadData}
+              loading={loading}
             />
           </div>
         )}

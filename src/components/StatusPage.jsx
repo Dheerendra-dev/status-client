@@ -2,20 +2,7 @@ import React from 'react'
 import { CheckCircle, AlertTriangle, XCircle, Clock } from 'lucide-react'
 
 const StatusPage = ({ services, incidents }) => {
-  const getStatusIcon = (status) => {
-    switch (status) {
-      case 'operational':
-        return <CheckCircle className="h-5 w-5 text-green-500" />
-      case 'degraded':
-        return <AlertTriangle className="h-5 w-5 text-yellow-500" />
-      case 'partial':
-        return <XCircle className="h-5 w-5 text-orange-500" />
-      case 'major':
-        return <XCircle className="h-5 w-5 text-red-500" />
-      default:
-        return <Clock className="h-5 w-5 text-gray-500" />
-    }
-  }
+
 
   const getStatusText = (status) => {
     switch (status) {
@@ -32,30 +19,7 @@ const StatusPage = ({ services, incidents }) => {
     }
   }
 
-  const getStatusColor = (status) => {
-    switch (status) {
-      case 'operational':
-        return 'text-green-600'
-      case 'degraded':
-        return 'text-yellow-600'
-      case 'partial':
-        return 'text-orange-600'
-      case 'major':
-        return 'text-red-600'
-      default:
-        return 'text-gray-600'
-    }
-  }
 
-  const getOverallStatus = () => {
-    const statuses = services.map(s => s.status)
-    if (statuses.includes('major')) return 'major'
-    if (statuses.includes('partial')) return 'partial'
-    if (statuses.includes('degraded')) return 'degraded'
-    return 'operational'
-  }
-
-  const overallStatus = getOverallStatus()
   const activeIncidents = incidents.filter(i => i.status !== 'resolved')
 
   return (

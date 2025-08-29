@@ -182,9 +182,6 @@ The application builds to static files and can be deployed to any static hosting
 4. Push to the branch: `git push origin feature-name`
 5. Submit a pull request
 
-## 📄 License
-
-This project is open source and available under the [MIT License](LICENSE).
 
 ## 🙏 Acknowledgments
 

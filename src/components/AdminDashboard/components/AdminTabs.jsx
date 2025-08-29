@@ -1,8 +1,8 @@
-const AdminTabs = ({ 
-  activeTab, 
-  setActiveTab, 
-  servicesCount, 
-  incidentsCount 
+const AdminTabs = ({
+  activeTab,
+  setActiveTab,
+  servicesCount,
+  incidentsCount
 }) => {
   return (
     <div className="admin-tabs">
@@ -17,6 +17,12 @@ const AdminTabs = ({
         className={`admin-tab ${activeTab === 'incidents' ? 'active' : ''}`}
       >
         Incidents ({incidentsCount})
+      </button>
+      <button
+        onClick={() => setActiveTab('metrics')}
+        className={`admin-tab ${activeTab === 'metrics' ? 'active' : ''}`}
+      >
+        📊 Metrics
       </button>
     </div>
   )

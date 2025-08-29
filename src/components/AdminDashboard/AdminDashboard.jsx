@@ -1,4 +1,4 @@
-import React from 'react'
+
 import { useAdminDashboard } from './hooks/useAdminDashboard'
 import {
   ServiceForm,
@@ -9,6 +9,7 @@ import {
   ServicesTab,
   IncidentsTab
 } from './components'
+import { MetricsDashboard } from '../metrics'
 
 const AdminDashboard = ({
   services = [],
@@ -99,6 +100,14 @@ const AdminDashboard = ({
           incidents={incidents}
           onAddIncident={() => setShowIncidentForm(true)}
           onEditIncident={startEditIncident}
+        />
+      )}
+
+      {/* Metrics Tab */}
+      {activeTab === 'metrics' && (
+        <MetricsDashboard
+          services={services}
+          incidents={incidents}
         />
       )}
 

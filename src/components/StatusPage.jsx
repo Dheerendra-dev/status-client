@@ -1,5 +1,5 @@
-import React from 'react'
-import { CheckCircle, AlertTriangle, XCircle, Clock } from 'lucide-react'
+
+import { UptimeChart } from './metrics'
 
 const StatusPage = ({ services, incidents }) => {
 
@@ -183,6 +183,18 @@ const StatusPage = ({ services, incidents }) => {
           ))}
         </div>
       </div>
+
+      {/* Metrics Section */}
+      {services.length > 0 && (
+        <div className="status-metrics-section">
+          <div className="container">
+            <h2 className="section-title">Service Performance</h2>
+            <div className="metrics-chart-container">
+              <UptimeChart services={services} />
+            </div>
+          </div>
+        </div>
+      )}
 
     </div>
   )

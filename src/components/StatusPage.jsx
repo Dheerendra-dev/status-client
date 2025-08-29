@@ -1,8 +1,22 @@
 
 import { UptimeChart } from './metrics'
+import {
+  calculateOverallUptime,
+  calculateAverageResponseTime,
+  countThisMonthIncidents,
+  getLastUpdateTime,
+  getMetricClass,
+  getOverallSystemStatus
+} from '../utils/statusCalculations'
 
 const StatusPage = ({ services, incidents }) => {
-
+  // Calculate dynamic metrics using utility functions
+  const activeIncidents = incidents.filter(i => i.status !== 'resolved')
+  const overallUptime = calculateOverallUptime(services)
+  const averageResponseTime = calculateAverageResponseTime(services)
+  const thisMonthIncidents = countThisMonthIncidents(incidents)
+  const lastUpdateTime = getLastUpdateTime(services, incidents)
+  const systemStatus = getOverallSystemStatus(services, incidents)
 
   const getStatusText = (status) => {
     switch (status) {
@@ -19,9 +33,6 @@ const StatusPage = ({ services, incidents }) => {
     }
   }
 
-
-  const activeIncidents = incidents.filter(i => i.status !== 'resolved')
-
   return (
     <div>
       {/* Header */}
@@ -32,8 +43,8 @@ const StatusPage = ({ services, incidents }) => {
         </p>
 
         <div className="overall-status">
-          <span>⚠️</span>
-          {activeIncidents.length > 0 ? 'Degraded Performance' : 'All Systems Operational'}
+          <span>{systemStatus === 'operational' ? '✅' : systemStatus === 'degraded' ? '⚠️' : '🚨'}</span>
+          {getStatusText(systemStatus)}
         </div>
 
         <div className="status-metrics">
@@ -43,11 +54,11 @@ const StatusPage = ({ services, incidents }) => {
           </div>
           <div className="status-metric">
             <span>📈</span>
-            99.2% Uptime
+            {overallUptime}% Uptime
           </div>
           <div className="status-metric">
             <span>🕒</span>
-            Updated 1 minute ago
+            Updated {lastUpdateTime}
           </div>
         </div>
       </div>
@@ -60,20 +71,32 @@ const StatusPage = ({ services, incidents }) => {
         <div className="metrics-grid">
           <div className="metric-card">
             <div className="metric-title">Overall Uptime</div>
-            <div className="metric-value success">99.2%</div>
-            <div className="metric-subtitle">Last 30 days</div>
+            <div className={`metric-value ${getMetricClass(overallUptime, 'uptime')}`}>
+              {overallUptime}%
+            </div>
+            <div className="metric-subtitle">Average across all services</div>
           </div>
 
           <div className="metric-card">
             <div className="metric-title">Response Time</div>
-            <div className="metric-value">124ms</div>
+            <div className={`metric-value ${getMetricClass(averageResponseTime, 'responseTime')}`}>
+              {averageResponseTime}ms
+            </div>
             <div className="metric-subtitle">Average API response</div>
           </div>
 
           <div className="metric-card">
             <div className="metric-title">Incidents Resolved</div>
-            <div className="metric-value">15</div>
+            <div className="metric-value">{thisMonthIncidents}</div>
             <div className="metric-subtitle">This month</div>
+          </div>
+
+          <div className="metric-card">
+            <div className="metric-title">Active Incidents</div>
+            <div className={`metric-value ${getMetricClass(activeIncidents.length, 'incidents')}`}>
+              {activeIncidents.length}
+            </div>
+            <div className="metric-subtitle">Currently ongoing</div>
           </div>
         </div>
       </div>

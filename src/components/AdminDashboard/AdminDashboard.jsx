@@ -1,13 +1,13 @@
 import React from 'react'
-import { Plus, AlertCircle } from 'lucide-react'
 import { useAdminDashboard } from './hooks/useAdminDashboard'
 import {
   ServiceForm,
   IncidentForm,
-  ServiceCard,
-  IncidentCard,
-  EmptyState,
-  ErrorAlert
+  ErrorAlert,
+  RefreshButton,
+  AdminTabs,
+  ServicesTab,
+  IncidentsTab
 } from './components'
 
 const AdminDashboard = ({
@@ -71,103 +71,35 @@ const AdminDashboard = ({
 
         <ErrorAlert error={error} onClose={clearError} />
 
-        {onRefresh && (
-          <button
-            onClick={onRefresh}
-            disabled={loading}
-            className="btn btn-secondary"
-            style={{ marginTop: '16px' }}
-          >
-            {loading ? 'Refreshing...' : 'Refresh Data'}
-          </button>
-        )}
+        <RefreshButton onRefresh={onRefresh} loading={loading} />
       </div>
 
       {/* Tabs */}
-      <div className="admin-tabs">
-        <button
-          onClick={() => setActiveTab('services')}
-          className={`admin-tab ${activeTab === 'services' ? 'active' : ''}`}
-        >
-          Services ({services.length})
-        </button>
-        <button
-          onClick={() => setActiveTab('incidents')}
-          className={`admin-tab ${activeTab === 'incidents' ? 'active' : ''}`}
-        >
-          Incidents ({incidents.length})
-        </button>
-      </div>
+      <AdminTabs
+        activeTab={activeTab}
+        setActiveTab={setActiveTab}
+        servicesCount={services.length}
+        incidentsCount={incidents.length}
+      />
 
       {/* Services Tab */}
       {activeTab === 'services' && (
-        <div className="admin-section">
-          <div className="section-header">
-            <h2 className="section-title">Services</h2>
-            <button
-              onClick={() => setShowServiceForm(true)}
-              className="btn btn-primary"
-            >
-              <Plus size={16} />
-              Add Service
-            </button>
-          </div>
-
-          {/* Services List */}
-          {services.length === 0 ? (
-            <EmptyState
-              title="No services yet"
-              description="Create your first service to start monitoring your infrastructure."
-            />
-          ) : (
-            <div className="services-admin-grid">
-              {services.map(service => (
-                <ServiceCard
-                  key={service.id}
-                  service={service}
-                  onEdit={startEditService}
-                  onDelete={handleDeleteService}
-                  loading={loading}
-                />
-              ))}
-            </div>
-          )}
-        </div>
+        <ServicesTab
+          services={services}
+          onAddService={() => setShowServiceForm(true)}
+          onEditService={startEditService}
+          onDeleteService={handleDeleteService}
+          loading={loading}
+        />
       )}
 
       {/* Incidents Tab */}
       {activeTab === 'incidents' && (
-        <div className="admin-section">
-          <div className="section-header">
-            <h2 className="section-title">Incidents</h2>
-            <button
-              onClick={() => setShowIncidentForm(true)}
-              className="btn btn-primary"
-              style={{ background: '#dc2626', borderColor: '#dc2626' }}
-            >
-              <AlertCircle size={16} />
-              Create Incident
-            </button>
-          </div>
-
-          {/* Incidents List */}
-          {incidents.length === 0 ? (
-            <EmptyState
-              title="No incidents"
-              description="No active incidents. Your services are running smoothly!"
-            />
-          ) : (
-            <div className="services-admin-grid">
-              {incidents.map(incident => (
-                <IncidentCard
-                  key={incident.id}
-                  incident={incident}
-                  onEdit={startEditIncident}
-                />
-              ))}
-            </div>
-          )}
-        </div>
+        <IncidentsTab
+          incidents={incidents}
+          onAddIncident={() => setShowIncidentForm(true)}
+          onEditIncident={startEditIncident}
+        />
       )}
 
       {/* Forms */}
